@@ -1,0 +1,75 @@
+pipeline {
+    agent 
+
+    
+    environment {
+        //FIREBASE_DEPLOY_TOKEN = credentials('firebase-token')
+	     TOKENAWS = credentials('awsid')
+
+    }
+    
+   tools {
+       maven 'Maven 3.9.7'
+        // jdk 'openjdk 21.0.3 2024-04-16 LTS'
+    } 
+
+    stages {
+        stage('Building') {
+            steps {
+                echo 'Building...'
+                // Add your build steps here
+
+            }
+        } 
+
+        stage('Testing Environment') {
+            steps {
+                script {
+                    def exists1 = fileExists '/tmp/SUCCESS.txt'
+                    def exists2 = fileExists '/tmp/FAILURE.txt'
+
+
+sh 'ssh -T -oStrictHostKeyChecking=no -i "$TOKENAWS" ec2-user@54.90.88.167 "sudo dnf update; sudo dnf install git -y; sudo dnf install -y httpd; sudo systemctl start httpd; sudo git clone https://github.com/Tamalero/DevOps2_FinalLab_P1; sudo mv DevOps2_FinalLab_P1/public/* /var/www/html"'
+                    
+                    sh 'mvn -f pom.xml clean install'
+                    sh 'mvn exec:java -Dexec.mainClass=test1.Main'
+
+                    if (exists2) {
+                        error "Test was deemed a FAILURE. File FAILURE.txt is present."
+                    }
+                }
+            } 
+        } 
+
+        stage('Staging Environment') {
+            steps {
+                script {
+                    def exists1 = fileExists '/tmp/SUCCESS.txt'
+                    
+                    if (exists1) {
+                        
+                        echo 'Staging'
+
+sh 'ssh -T -oStrictHostKeyChecking=no -i "$TOKENAWS" ec2-user@3.80.53.127 "sudo dnf update; sudo dnf install git -y; sudo dnf install -y httpd; sudo systemctl start httpd; sudo git clone https://github.com/Tamalero/DevOps2_FinalLab_P1; sudo mv DevOps2_FinalLab_P1/public/* /var/www/html"'
+                    }
+                }
+            } 
+        } 
+
+        stage('Production Environment') {
+            steps {
+                script {
+                    def exists1 = fileExists '/tmp/SUCCESS.txt'
+                    
+                    if (exists1) {
+                        echo 'Deploying to Production'
+
+sh 'ssh -T -oStrictHostKeyChecking=no -i "$TOKENAWS" ec2-user@3.90.141.197 "sudo dnf update; sudo dnf install git -y; sudo dnf install -y httpd; sudo systemctl start httpd; sudo git clone https://github.com/Tamalero/DevOps2_FinalLab_P1; sudo mv DevOps2_FinalLab_P1/public/* /var/www/html"'
+sh 'ssh -T -oStrictHostKeyChecking=no -i "$TOKENAWS" ec2-user@54.88.94.35 "sudo dnf update; sudo dnf install git -y; sudo dnf install -y httpd; sudo systemctl start httpd; sudo git clone https://github.com/Tamalero/DevOps2_FinalLab_P1; sudo mv DevOps2_FinalLab_P1/public/* /var/www/html"'
+                        
+                    }
+                }
+            } 
+        } 
+    }
+}
