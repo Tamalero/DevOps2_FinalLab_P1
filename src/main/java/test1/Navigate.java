@@ -40,7 +40,7 @@ public class Navigate {
         this.driver = driver;
         WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(5));
         String filePathString = "/tmp/SUCCESS.txt";
-        String filePathString2 = "tmp/FAILURE.txt";
+        String filePathString2 = "/tmp/FAILURE.txt";
         Path path = Paths.get(filePathString);
         Path path2 = Paths.get(filePathString2);
         
