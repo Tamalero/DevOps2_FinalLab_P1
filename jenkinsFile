@@ -4,7 +4,7 @@ pipeline {
     
     environment {
         //FIREBASE_DEPLOY_TOKEN = credentials('firebase-token')
-	     TOKENAWS = credentials('awsid')
+	     TOKENAWS = credentials('ec2jenkins')
 
     }
     
