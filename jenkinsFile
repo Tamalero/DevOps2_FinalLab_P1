@@ -29,7 +29,7 @@ pipeline {
                     def exists2 = fileExists '/tmp/FAILURE.txt'
 
 
-sh 'ssh -T -oStrictHostKeyChecking=no -i "$TOKENAWS" ec2-user@54.90.88.167 "sudo dnf update; sudo dnf install git -y; sudo dnf install -y httpd; sudo systemctl start httpd; sudo rm -r DevOps2_FinalLab_P1;  sudo git clone https://github.com/Tamalero/DevOps2_FinalLab_P1; sudo mv -f DevOps2_FinalLab_P1/public/* /var/www/html"'
+sh 'ssh -T -oStrictHostKeyChecking=no -i "$TOKENAWS" ec2-user@54.90.88.167 "sudo dnf update; sudo dnf install git -y; sudo dnf install -y httpd; sudo systemctl start httpd; sudo curl https://intoli.com/install-google-chrome.sh | bash; sudo mv /usr/bin/google-chrome-stable /usr/bin/google-chrome; sudo google-chrome --version && which google-chrome;sudo rm -r DevOps2_FinalLab_P1;  sudo git clone https://github.com/Tamalero/DevOps2_FinalLab_P1; sudo mv -f DevOps2_FinalLab_P1/public/* /var/www/html"'
                     
                     sh 'mvn -f pom.xml clean install'
                     sh 'mvn exec:java -Dexec.mainClass=test1.Main'
