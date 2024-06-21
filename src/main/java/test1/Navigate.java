@@ -66,13 +66,13 @@ public class Navigate {
         try {
             Thread.sleep(1000);
             System.out.println("Second Phase, Part 2 starts here. Current info is: " + isCorrect);
-            String comparisonOne = fieldOne.getText();
-            if ( comparisonOne.contains("playerText")) {
-                isCorrect = false;
+            String comparisonOne = fieldOne.getText().toString().toLowerCase();
+            if ( comparisonOne.contains("x") && (comparisonOne.length() ==1)) {
+                isCorrect = true;
             
             }
             else {
-                isCorrect = true;
+                isCorrect = false;
             }
 
            
